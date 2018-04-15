@@ -5,6 +5,7 @@ target triple = "x86_64-unknown-linux-gnu"
 
 @temp = global i32 0, align 4
 @.str = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+@.str.1 = private unnamed_addr constant [3 x i8] c"%d\00", align 1
 
 ; Function Attrs: noinline nounwind uwtable
 define i32 @main() #0 {
@@ -12,6 +13,7 @@ entry:
   %retval = alloca i32, align 4
   %x = alloca i32, align 4
   %y = alloca i32, align 4
+  %z = alloca i32, align 4
   store i32 0, i32* %retval, align 4
   %0 = load i32, i32* @temp, align 4
   %cmp = icmp eq i32 %0, 1
@@ -40,11 +42,9 @@ while.body:                                       ; preds = %while.cond
   br label %while.cond
 
 while.end:                                        ; preds = %while.cond
-  %3 = load i32, i32* %x, align 4
-  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i32 %3)
   store i32 0, i32* %y, align 4
-  %4 = load i32, i32* @temp, align 4
-  %cmp2 = icmp eq i32 %4, 1
+  %3 = load i32, i32* @temp, align 4
+  %cmp2 = icmp eq i32 %3, 1
   br i1 %cmp2, label %if.then3, label %if.else4
 
 if.then3:                                         ; preds = %while.end
@@ -56,6 +56,24 @@ if.else4:                                         ; preds = %while.end
   br label %if.end5
 
 if.end5:                                          ; preds = %if.else4, %if.then3
+  %4 = load i32, i32* %x, align 4
+  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i32 %4)
+  store i32 1, i32* %z, align 4
+  %5 = load i32, i32* @temp, align 4
+  %cmp6 = icmp eq i32 %5, 3
+  br i1 %cmp6, label %if.then7, label %if.else8
+
+if.then7:                                         ; preds = %if.end5
+  store i32 3, i32* %z, align 4
+  br label %if.end9
+
+if.else8:                                         ; preds = %if.end5
+  store i32 4, i32* %z, align 4
+  br label %if.end9
+
+if.end9:                                          ; preds = %if.else8, %if.then7
+  %6 = load i32, i32* %y, align 4
+  %call10 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i32 0, i32 0), i32 %6)
   ret i32 0
 }
 

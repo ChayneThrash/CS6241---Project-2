@@ -32,12 +32,22 @@ namespace {
 
       for (BasicBlock& b : F)
       {
-        if (b.getName() == "while.end")
+        if (b.getName() == "if.end5")
         {
           for (BasicBlock* s : successors(&b))
           {
             killEdges[dMerge].insert(std::make_pair(&b, s));
           }
+        }
+      }
+
+
+      for (BasicBlock& b : F)
+      {
+        if (b.getName() == "if.end5")
+        {
+          destructiveMerges.insert(&b);
+          dMerge = &b;
         }
       }
 

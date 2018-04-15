@@ -19,8 +19,6 @@ int main()
     ++temp;
   }
 
-  printf("%d\n", x);
-
   int y = 0;
 
   if (temp == 1)
@@ -31,6 +29,20 @@ int main()
   {
     y = 2;
   }
+
+  printf("%d\n", x);
+
+  int z = 1;
+  if (temp == 3)
+  {
+    z = 3;
+  }
+  else
+  {
+    z = 4;
+  }
+
+  printf("%d", y);
 
   return 0;
 
