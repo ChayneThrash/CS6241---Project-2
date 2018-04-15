@@ -1,14 +1,14 @@
 #include "MakeSplitGraph.h"
 
 namespace {
-  class InfeasibleTest : public FunctionPass {
+  class SplitGraphTest : public FunctionPass {
   private:
 
   public:
     static char ID;
     Module* m;
 
-    InfeasibleTest() : FunctionPass(ID) {}
+    SplitGraphTest() : FunctionPass(ID) {}
 
 
     bool doInitialization(Module &M) override {
@@ -17,7 +17,42 @@ namespace {
     }
     bool runOnFunction(Function &F) override {
 
-      return false;
+      BasicBlock* dMerge;
+
+      std::set<BasicBlock*> destructiveMerges;
+      std::map<BasicBlock*, std::set<std::pair<BasicBlock*, BasicBlock*>>> killEdges;
+      for (BasicBlock& b : F)
+      {
+        if (b.getName() == "if.end")
+        {
+          destructiveMerges.insert(&b);
+          dMerge = &b;
+        }
+      }
+
+      for (BasicBlock& b : F)
+      {
+        if (b.getName() == "while.end")
+        {
+          for (BasicBlock* s : successors(&b))
+          {
+            killEdges[dMerge].insert(std::make_pair(&b, s));
+          }
+        }
+      }
+
+      makeSplitGraph(destructiveMerges, killEdges);
+      for(BasicBlock& b : F)
+      {
+        errs() << "basic block: " << b.getName() << "\n";
+        for (Instruction& i : b)
+        {
+          i.print(errs());
+          errs() << "\n";
+        }
+        errs() << "\n";
+      }
+      return true;
     }
 
     void getAnalysisUsage(AnalysisUsage &AU) const override {
@@ -27,6 +62,6 @@ namespace {
   };
 }
 
-char InfeasibleTest::ID = 0;
-static RegisterPass<InfeasibleTest> X("InfeasibleTest", "Computes stats for each function", true, true);
+char SplitGraphTest::ID = 0;
+static RegisterPass<SplitGraphTest> X("SplitGraphTest", "Computes stats for each function", true, false);
 
