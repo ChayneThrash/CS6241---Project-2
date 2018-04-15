@@ -1,1 +1,2 @@
 add_library(LLVMSplitGraphTest MODULE SplitGraphTest.cpp)
+add_library(LLVMDataflowAnalysisTest MODULE DataflowAnalysisTest.cpp)
