@@ -49,6 +49,7 @@ void computeInSet(BasicBlock* b, std::map<BasicBlock*, std::set<std::pair<Value*
 
   for(std::pair<Value*, ConstantInt*> r : toRemove)
   {
+    errs() << "here";
     inSet.erase(inSet.find(r));
   }
 }
@@ -56,8 +57,8 @@ void computeInSet(BasicBlock* b, std::map<BasicBlock*, std::set<std::pair<Value*
 void doDataflowAnalysis(Function& f, 
         std::map<BasicBlock*, std::set<std::pair<Value*, ConstantInt*>>>& in, 
         std::map<BasicBlock*, std::set<std::pair<Value*, ConstantInt*>>>& out, 
-        std::map<BasicBlock*, std::set<Value*>> used,
-        std::map<BasicBlock*, std::set<Value*>> ueDefs)
+        std::map<BasicBlock*, std::set<Value*>>& used,
+        std::map<BasicBlock*, std::set<Value*>>& ueDefs)
 {
   std::map<BasicBlock*, std::map<Value*, Value*>> deDefs;
   for (BasicBlock& b : f)
@@ -94,6 +95,17 @@ void doDataflowAnalysis(Function& f,
     }
   }
 
+  for (BasicBlock& b : f)
+  {
+    for(BasicBlock* p : predecessors(&b))
+    {
+      for(std::pair<Value*, ConstantInt*> o : out[p])
+      {
+        out[&b].insert(o);
+      }
+    }
+  }
+
   std::set<BasicBlock*> worklist;
   for(BasicBlock& b : f)
   {
@@ -123,9 +135,14 @@ void doDataflowAnalysis(Function& f,
       {
         inSet.erase(result);
       }
+      if (isa<ConstantInt>(deDef.second))
+      {
+        inSet.insert(std::make_pair(deDef.first, dyn_cast<ConstantInt>(deDef.second)));
+      }
     }
 
     size_t priorOutSetSize = out[b].size();
+    out[b].clear();
     for(std::pair<Value*, ConstantInt*> i : inSet)
     {
       out[b].insert(i);
