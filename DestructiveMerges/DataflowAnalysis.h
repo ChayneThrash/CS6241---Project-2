@@ -49,7 +49,6 @@ void computeInSet(BasicBlock* b, std::map<BasicBlock*, std::set<std::pair<Value*
 
   for(std::pair<Value*, ConstantInt*> r : toRemove)
   {
-    errs() << "here";
     inSet.erase(inSet.find(r));
   }
 }
