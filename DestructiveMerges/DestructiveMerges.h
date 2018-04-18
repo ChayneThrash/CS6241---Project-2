@@ -34,6 +34,8 @@ namespace{
 		
 		// This must be called after destructiveMergesEnd()
 		const  std::map<BasicBlock*, std::set<std::pair<BasicBlock*, BasicBlock*>>>& getKillEdges(){
+			// To detect loops
+			std::set<BasicBlock*> processedBlocks; 
 			for(BasicBlock* B : destructiveMerges){
 				std::queue<BasicBlock*> worklist;
 				worklist.push(B);
@@ -43,24 +45,17 @@ namespace{
 					TerminatorInst *T = workItem->getTerminator();
 					for(unsigned int i = 0; i < T->getNumSuccessors(); i++){
 						BasicBlock *successor = T->getSuccessor(i);
-						if(influencedNodes[workItem].find(successor) != influencedNodes[workItem].end()){
+
+						if(influencedNodes[workItem].find(successor) == influencedNodes[workItem].end()
+							and processedBlocks.find(successor) == processedBlocks.end()){
+							processedBlocks.insert(successor);
 							worklist.push(successor);
 							continue;
 						}
 
-						bool can_reach_influenced_node = false;
-						for(BasicBlock* iNode : influencedNodes[successor]){
-							if(isReachable(successor, iNode)){
-								can_reach_influenced_node = true;
-								break;
-							}
-						}
+						if(isInRoI(B, workItem) and !(isInRoI(B, successor)))
+								killEdges[B].insert(std::make_pair(workItem, successor));
 
-						if(can_reach_influenced_node and DT->dominates(B, successor)){
-							worklist.push(successor);
-						}else{ 
-							killEdges[B].insert(std::make_pair(workItem, successor));
-						}	
 					}
 				}
 			}
@@ -113,6 +108,18 @@ namespace{
 		}
 
 	private:
+
+		bool isInRoI(BasicBlock* m, BasicBlock* n){
+			// If u is not reachable, it is not in the RoI
+			if(!(isReachable(m ,n)))
+				return false;
+
+			for(BasicBlock* u : influencedNodes[m])
+				if(isReachable(n, u))
+					return true;
+
+			return false;
+		}
 		
 		bool isReachable(BasicBlock* blockA, BasicBlock* blockB){
 			// If it's the same block.. it is reachable
@@ -122,6 +129,8 @@ namespace{
 			// If blockA dominates blockB, it is reachable
 			if(DT->dominates(blockA, blockB))
 				return true;
+
+			visited.clear();
 
 			// Otherwise, do that hard way and test with DFS 
 			// Start the DFS with blockA as the starting node
