@@ -27,17 +27,18 @@ namespace {
 
 			DestructiveMerges* DM = new DestructiveMerges(F, in, out, used, ueDefs, DT);
 			
-			// Set the destructive merges set
+			// Required: Set the destructive merges set
 			DM->destructiveMergesStart();
-			// Compute Influenced Blocks
+			// Required: Compute Influenced Blocks
+			// Note that getInfluencedNodes() must be called, even if we dont want to store the value
 			std::map<BasicBlock*, std::set<BasicBlock*>> influencedNodes = DM->getInfluencedNodes();
-			// Get the influential destructive merge blocks
+			// Required: Get the influential destructive merge blocks
 			std::set<BasicBlock*> destructiveMerges = DM->destructiveMergesEnd();
-			// Get RoI
+			// Optional: Get RoI
 			std::map<BasicBlock*, std::set<BasicBlock*>> RoI = DM->getRoIs();
-			// Get kill Edges
+			// Required: Get kill Edges
 			std::map<BasicBlock*, std::set<std::pair<BasicBlock*, BasicBlock*>>> killEdges = DM->getKillEdges();
-			// Get Killed Defs at the merge block
+			// Optional: Get Killed Defs at the merge block
 			std::map<BasicBlock*, std::set<Value*>> defs_killed = DM->getDefsKilled();
 
 			for(BasicBlock* B : destructiveMerges){
