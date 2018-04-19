@@ -33,11 +33,19 @@ namespace {
 			std::map<BasicBlock*, std::set<BasicBlock*>> influencedNodes = DM->getInfluencedNodes();
 			// Get the influential destructive merge blocks
 			std::set<BasicBlock*> destructiveMerges = DM->destructiveMergesEnd();
-			// 
+			// Get RoI
+			std::map<BasicBlock*, std::set<BasicBlock*>> RoI = DM->getRoIs();
+			// Get kill Edges
 			std::map<BasicBlock*, std::set<std::pair<BasicBlock*, BasicBlock*>>> killEdges = DM->getKillEdges();
+			// Get Killed Defs at the merge block
+			std::map<BasicBlock*, std::set<Value*>> defs_killed = DM->getDefsKilled();
 
 			for(BasicBlock* B : destructiveMerges){
 				errs() << "[*] Block (" << B->getName() << ") is a destructive merge block.\n";
+				errs() << "[!] Defs Killed: ";
+				for(auto V : defs_killed[B])
+					errs() << V->getName() << " ";	
+				errs()<<"\n";
 				errs() << "[!] Influenced Blocks: ";
 				for(auto BB : influencedNodes[B])
 					errs() << BB->getName() << " ";	
@@ -45,6 +53,10 @@ namespace {
 				errs() << "[!] Kill Edges: ";
 				for(auto BB : killEdges[B])
 					errs() << "(" << BB.first->getName() << "->" << BB.second->getName() << ") ";	
+				errs()<<"\n";
+				errs() << "[!] RoI blocks: ";
+				for(auto BB : RoI[B])
+					errs() << BB->getName() << " ";	
 				errs()<<"\n";
 			}
 

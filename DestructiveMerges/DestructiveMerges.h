@@ -14,6 +14,7 @@ namespace{
 		std::map<BasicBlock*, std::set<std::pair<Value*, ConstantInt*>>>& in;
 		std::map<BasicBlock*, std::set<BasicBlock*>> influencedNodes;
 		std::map<BasicBlock*, std::set<Value*>> defs_killed; 
+		std::map<BasicBlock*, std::set<BasicBlock*>> RoI;
     std::map<BasicBlock*, std::set<Value*>>& ueDefs;
 		std::map<BasicBlock*, std::set<Value*>>& used;
 		std::set<BasicBlock*> destructiveMerges;
@@ -32,45 +33,7 @@ namespace{
 			this->DT = DT;
 		}
 		
-		// This must be called after destructiveMergesEnd()
-		const  std::map<BasicBlock*, std::set<std::pair<BasicBlock*, BasicBlock*>>>& getKillEdges(){
-			// To detect loops
-			std::set<BasicBlock*> processedBlocks; 
-			for(BasicBlock* B : destructiveMerges){
-				std::queue<BasicBlock*> worklist;
-				worklist.push(B);
-				while(!worklist.empty()) {
-					auto workItem = worklist.front();
-					worklist.pop();
-					TerminatorInst *T = workItem->getTerminator();
-					for(unsigned int i = 0; i < T->getNumSuccessors(); i++){
-						BasicBlock *successor = T->getSuccessor(i);
-
-						if(influencedNodes[workItem].find(successor) == influencedNodes[workItem].end()
-							and processedBlocks.find(successor) == processedBlocks.end()){
-							processedBlocks.insert(successor);
-							worklist.push(successor);
-							continue;
-						}
-
-						if(isInRoI(B, workItem) and !(isInRoI(B, successor)))
-								killEdges[B].insert(std::make_pair(workItem, successor));
-
-					}
-				}
-			}
-			return killEdges;
-		}
-		
-
-		// This must be called after getInfluencedNodes()
-		const std::set<BasicBlock*>& destructiveMergesEnd(){
-			for(BasicBlock* B : destructiveMerges)
-				if(influencedNodes[B].size() == 0)
-					destructiveMerges.erase(B);
-			return destructiveMerges;
-		}
-
+		// First function to run
 		const std::set<BasicBlock*>& destructiveMergesStart(){
 			for(BasicBlock& BB : F){
 				BasicBlock* B = &BB;
@@ -88,10 +51,6 @@ namespace{
 		}
 
 		// This must be called after destructiveMergesStart()
-		const std::map<BasicBlock*, std::set<Value*>>& getDefsKilled(){
-			return defs_killed;
-		}
-
 		const std::map<BasicBlock*, std::set<BasicBlock*>>& getInfluencedNodes(){
 			for(BasicBlock* B : destructiveMerges){
 				for(Value* def : defs_killed[B]){
@@ -107,11 +66,86 @@ namespace{
 			return influencedNodes;
 		}
 
+		// This must be called after getInfluencedNodes()
+		const std::set<BasicBlock*>& destructiveMergesEnd(){
+			// First remove non-influential merge 
+			for(BasicBlock* B : destructiveMerges)
+				if(influencedNodes[B].size() == 0)
+					destructiveMerges.erase(B);
+
+
+			// Then we compute the RoI of each to apply the fitness function 
+			computeRoIs();
+
+			// Finally apply the fitness function and remove unfit merge blocks 
+			applyFitness();
+
+
+			return destructiveMerges;
+		}
+
+		// This must be called after destructiveMergesEnd()
+		const  std::map<BasicBlock*, std::set<std::pair<BasicBlock*, BasicBlock*>>>& getKillEdges(){
+			// To detect loops
+			std::set<BasicBlock*> processedBlocks; 
+			for(BasicBlock* B : destructiveMerges){
+				std::queue<BasicBlock*> worklist;
+				worklist.push(B);
+				while(!worklist.empty()) {
+					auto workItem = worklist.front();
+					worklist.pop();
+					TerminatorInst *T = workItem->getTerminator();
+					for(unsigned int i = 0; i < T->getNumSuccessors(); i++){
+						BasicBlock *successor = T->getSuccessor(i);
+
+						if(RoI[B].find(workItem) != RoI[B].end() and 
+							 RoI[B].find(successor) == RoI[B].end() )
+								killEdges[B].insert(std::make_pair(workItem, successor));
+
+						if(influencedNodes[workItem].find(successor) == influencedNodes[workItem].end()
+							and processedBlocks.find(successor) == processedBlocks.end()){
+							processedBlocks.insert(successor);
+							worklist.push(successor);
+						}
+
+					}
+				}
+			}
+			return killEdges;
+		}
+
+		// This must be called after destructiveMergesEnd()
+		const std::map<BasicBlock*, std::set<BasicBlock*>>& getRoIs(){
+			return RoI;
+		}
+
+
+		// This must be called after destructiveMergesStart()
+		const std::map<BasicBlock*, std::set<Value*>>& getDefsKilled(){
+			return defs_killed;
+		}
+
+
 	private:
+		
+		void computeRoIs(){
+			for(BasicBlock* m : destructiveMerges){
+				for(BasicBlock& BB : F){
+					BasicBlock* n = &BB;
+					if(isInRoI(m, n))
+						RoI[m].insert(n);
+				}
+			}
+		}
 
 		bool isInRoI(BasicBlock* m, BasicBlock* n){
 			// If u is not reachable, it is not in the RoI
 			if(!(isReachable(m ,n)))
+				return false;
+		
+			// We consider only the case where all RoI blocks are 
+			// dominated by the merge block 
+			if(!(DT->dominates(m, n)))
 				return false;
 
 			for(BasicBlock* u : influencedNodes[m])
@@ -119,6 +153,28 @@ namespace{
 					return true;
 
 			return false;
+		}
+
+		void applyFitness(){
+			// We remember only the two top 2 fits 
+			BasicBlock* topFit1;
+			double topFit1Value = 0;
+			BasicBlock* topFit2;
+			double topFit2Value = 0;
+			for(BasicBlock* B : destructiveMerges){
+				double fitness = ((double)influencedNodes[B].size()) / ((double)RoI[B].size());
+				if(fitness > topFit1Value){
+					topFit1Value = fitness;
+					topFit1 = B;
+				}else if(fitness > topFit2Value){
+					topFit2Value = fitness;
+					topFit2 = B;					
+				}
+			}
+
+			for(BasicBlock* B : destructiveMerges)
+				if(B != topFit1 and B != topFit2)
+					destructiveMerges.erase(B);
 		}
 		
 		bool isReachable(BasicBlock* blockA, BasicBlock* blockB){
