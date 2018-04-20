@@ -196,7 +196,7 @@ void makeSplitGraph(std::set<BasicBlock*>& destructiveMerges, std::map<BasicBloc
 
   }
 
-  eliminateUnreachableBlock(*f);
+  //eliminateUnreachableBlock(*f);
 
 }
 

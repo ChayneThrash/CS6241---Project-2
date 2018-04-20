@@ -156,9 +156,9 @@ namespace {
 
 		void applyFitness(){
 			// We remember only the two top 2 fits 
-			BasicBlock* topFit1;
+			BasicBlock* topFit1 = nullptr;
 			double topFit1Value = 0;
-			BasicBlock* topFit2;
+			BasicBlock* topFit2 = nullptr;
 			double topFit2Value = 0;
 			for(BasicBlock* B : destructiveMerges){
 				double fitness = ((double)influencedNodes[B].size()) / ((double)RoI[B].size());
@@ -173,9 +173,11 @@ namespace {
 				}
 			}
 
-			for(BasicBlock* B : destructiveMerges)
-				if(B != topFit1 and B != topFit2)
-					destructiveMerges.erase(B);
+			destructiveMerges.clear();
+			if (topFit1 != nullptr)
+				destructiveMerges.insert(topFit1);
+			if (topFit2 != nullptr)
+				destructiveMerges.insert(topFit2);
 		}
 		
 		bool isReachable(BasicBlock* blockA, BasicBlock* blockB){
@@ -232,40 +234,30 @@ namespace {
 
 			visited.clear();
 
-			return def_reach(B, B, userBlock, var);
+			return def_reach(B, userBlock, var);
 		}
 
 		// This returns true if we reached the userBlock without a def of var along the path
-		bool def_reach(BasicBlock* startBlock, BasicBlock* currentBlock, BasicBlock* userBlock, Value* var){
+		bool def_reach(BasicBlock* destructiveMerge, BasicBlock* currentBlock, Value* var){
 
-			visited[currentBlock] = true; 
-
-			// Is the current block a merge point where the def is killed? 
-			if(currentBlock != startBlock and defs_killed[currentBlock].find(var) != defs_killed[currentBlock].end())
-				return false;
-
-			// We found a def in this path.. 
-			if(isDefinedHere(currentBlock, var))
-				return false;
-
-			// Did we reach the userBlock? We must have not met any defs
-			if(currentBlock == userBlock)
-				return true;
-
-			// Otherwise continue the path and look for defs or reach the userBlock
-
-			bool isUserBlockReached = false;			
-	
-			TerminatorInst *T = currentBlock->getTerminator();
-			for(unsigned int i = 0; i < T->getNumSuccessors(); i++){
-				BasicBlock *successor = T->getSuccessor(i);
-		
-				if(!visited[successor])
-					isUserBlockReached |= def_reach(startBlock, successor, userBlock, var);
-
+			std::set<BasicBlock*> blocksWithDefs;
+			for(std::pair<BasicBlock*, std::set<Value*>> ueDef : ueDefs)
+			{
+				if (ueDef.second.find(var) != ueDef.second.end() && isReachable(destructiveMerge, ueDef.first))
+				{
+					blocksWithDefs.insert(ueDef.first);
+				}
 			}
-	
-			return isUserBlockReached;
+
+			for(BasicBlock* blockWithDef : blocksWithDefs)
+			{
+				if (isReachable(blockWithDef, currentBlock))
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 

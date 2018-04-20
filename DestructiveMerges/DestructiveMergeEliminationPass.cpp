@@ -17,13 +17,18 @@ namespace {
       return false;
     }
     bool runOnFunction(Function &F) override {
-
+      // if (F.getName() != "BZ2_hbMakeCodeLengths")
+      // {
+      //   return true;
+      // }
+      errs() << "start" << F.getName();
       // Get the data flow analysis for the current function
       std::map<BasicBlock*, std::set<std::pair<Value*, ConstantInt*>>> in;
       std::map<BasicBlock*, std::set<std::pair<Value*, ConstantInt*>>> out; 
       std::map<BasicBlock*, std::set<Value*>> used;
       std::map<BasicBlock*, std::set<Value*>> ueDefs;
       doDataflowAnalysis(F, in, out, used, ueDefs);
+      errs() << " finished dataflow analysis";
       
       DominatorTree DT(F);
 
@@ -43,8 +48,35 @@ namespace {
       // Optional: Get Killed Defs at the merge block
       std::map<BasicBlock*, std::set<Value*>> defs_killed = DM.getDefsKilled();
 
+      errs() << " finished getting destructive merges";
+
+      for(BasicBlock* B : destructiveMerges){
+        errs() << "[*] Block (" << B->getName() << ") is a destructive merge block.\n";
+        errs() << "[!] Defs Killed: ";
+        for(auto V : defs_killed[B])
+          errs() << V->getName() << " ";  
+        errs()<<"\n";
+        errs() << "[!] Influenced Blocks: ";
+        for(auto BB : influencedNodes[B])
+          errs() << BB->getName() << " "; 
+        errs()<<"\n";
+        errs() << "[!] Kill Edges: ";
+        for(auto BB : killEdges[B])
+          errs() << "(" << BB.first->getName() << "->" << BB.second->getName() << ") "; 
+        errs()<<"\n";
+        errs() << "[!] RoI blocks: ";
+        for(auto BB : RoI[B])
+          errs() << BB->getName() << " "; 
+        errs()<<"\n";
+      }
+
       makeSplitGraph(destructiveMerges, killEdges, DT);
+
+      errs() << " finished making split graph";
+
       doCopyPropagation(F);
+
+      errs() << " finished copy propagation";
       return true;
     }
 
