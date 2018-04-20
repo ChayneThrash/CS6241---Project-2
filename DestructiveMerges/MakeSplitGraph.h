@@ -57,7 +57,6 @@ bool eliminateUnreachableBlock(Function &F) {
 
 BasicBlock* copy(BasicBlock* b, ValueToValueMapTy& vMap)
 {
-  errs() << "begin copy\n";
   BasicBlock* clonedBlock = llvm::CloneBasicBlock(b, vMap, "", b->getParent());
 
   for (Instruction& instruction : *clonedBlock)
@@ -72,7 +71,6 @@ BasicBlock* copy(BasicBlock* b, ValueToValueMapTy& vMap)
     }
   }
 
-  errs() << "end copy\n";
   return clonedBlock;
 }
 
@@ -90,7 +88,7 @@ void replaceSuccessor(BasicBlock* b, BasicBlock* old, BasicBlock* newBlock)
   }
 }
 
-void makeSplitGraph(std::set<BasicBlock*>& destructiveMerges, std::map<BasicBlock*, std::set<std::pair<BasicBlock*, BasicBlock*>>>& killEdges)
+void makeSplitGraph(std::set<BasicBlock*>& destructiveMerges, std::map<BasicBlock*, std::set<std::pair<BasicBlock*, BasicBlock*>>>& killEdges, DominatorTree& DT)
 {
   Function* f = nullptr;
   if (destructiveMerges.size() > 0)
@@ -113,6 +111,10 @@ void makeSplitGraph(std::set<BasicBlock*>& destructiveMerges, std::map<BasicBloc
     std::vector<BasicBlock*> preds;
     for(BasicBlock* p : predecessors(destructiveMerge))
     {
+      if (DT.dominates(destructiveMerge, p))
+      {
+        continue;
+      }
       preds.push_back(p);
     }
     for (BasicBlock* p : preds)

@@ -50,8 +50,8 @@ namespace {
           dMerge = &b;
         }
       }
-
-      makeSplitGraph(destructiveMerges, killEdges);
+      DominatorTree DT(F);
+      makeSplitGraph(destructiveMerges, killEdges, DT);
       for(BasicBlock& b : F)
       {
         errs() << "basic block: " << b.getName() << "\n";
@@ -66,7 +66,6 @@ namespace {
     }
 
     void getAnalysisUsage(AnalysisUsage &AU) const override {
-      AU.setPreservesAll();
     }
 
   };

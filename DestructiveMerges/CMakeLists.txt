@@ -1,2 +1,5 @@
 add_library(LLVMSplitGraphTest MODULE SplitGraphTest.cpp)
 add_library(LLVMDataflowAnalysisTest MODULE DataflowAnalysisTest.cpp)
+add_library(LLVMCopyPropagation MODULE CopyPropagation.cpp)
+add_library(LLVMDestructiveMergeEliminationPass MODULE DestructiveMergeEliminationPass.cpp)
+add_library(LLVMDestructiveMergesRun MODULE DestructiveMergesRun.cpp)

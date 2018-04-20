@@ -5,7 +5,7 @@
 
 using namespace llvm;
 
-namespace{
+namespace {
 
 	class DestructiveMerges{
 	private:
@@ -37,8 +37,7 @@ namespace{
 		const std::set<BasicBlock*>& destructiveMergesStart(){
 			for(BasicBlock& BB : F){
 				BasicBlock* B = &BB;
-				for (auto it = pred_begin(B), et = pred_end(B); it != et; ++it){
-					BasicBlock* P = *it;
+				for (BasicBlock* P : predecessors(B)){
 					for(std::pair<Value*, ConstantInt*> def : out[P]){
 						if(in[B].find(def) == in[B].end()){
 							destructiveMerges.insert(B);
@@ -164,6 +163,8 @@ namespace{
 			for(BasicBlock* B : destructiveMerges){
 				double fitness = ((double)influencedNodes[B].size()) / ((double)RoI[B].size());
 				if(fitness > topFit1Value){
+					topFit2 = topFit1;
+					topFit2Value = topFit1Value;
 					topFit1Value = fitness;
 					topFit1 = B;
 				}else if(fitness > topFit2Value){

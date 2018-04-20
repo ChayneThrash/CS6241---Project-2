@@ -147,7 +147,7 @@ void doDataflowAnalysis(Function& f,
       out[b].insert(i);
     }
 
-    if (out[b].size() > priorOutSetSize)
+    if (out[b].size() != priorOutSetSize)
     {
       for (BasicBlock* s : successors(b))
       {

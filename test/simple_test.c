@@ -30,7 +30,7 @@ int main()
     y = 2;
   }
 
-  printf("%d\n", x);
+  x + x;
 
   int z = 1;
   if (temp == 3)
@@ -42,7 +42,7 @@ int main()
     z = 4;
   }
 
-  printf("%d", y);
+  y + y;
 
   return 0;
 
