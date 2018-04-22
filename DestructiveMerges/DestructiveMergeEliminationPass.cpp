@@ -91,7 +91,7 @@ namespace {
             }
             else
             {
-              if (instruction.getOpcode() == Instruction::Call)
+              if (instruction.getOpcode() == Instruction::Call || instruction.getOpcode() == Instruction::GetElementPtr)
               {
                 continue;
               }
