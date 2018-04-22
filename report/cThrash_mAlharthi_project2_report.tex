@@ -78,7 +78,7 @@ We tested our implementation on two benchmarks. We compare our implementation wi
 \begin{tabular}{| C{3cm} | C{3cm} | C{3cm} | C{3cm} | C{3cm} |}
 \hline
 Benchmark & Static size with sparse conditional constant propagation & Static size with destructive merge elimination & \% of increase in static size \\ \cline{1-4} 
-B1 & A & B & C  \\ \cline{1-4}
+bzip2 & 88776B & 105160B & \%18  \\ \cline{1-4}
 B2 & D & E & F  \\ \cline{1-4}
 \end{tabular}
 %\end{table}
@@ -92,7 +92,7 @@ B2 & D & E & F  \\ \cline{1-4}
 \begin{tabular}{| C{3cm} | C{3cm} | C{3cm} | C{3cm} | C{3cm} |}
 \hline
 Benchmark & Constants propagated\# with sparse conditional constant propagation & Constants propagated\# with destructive merge elimination & \% of Constants propagated increased \\ \cline{1-4} 
-B1 & A & B & C  \\ \cline{1-4}
+bzip2 & 56 & 107 & \%91  \\ \cline{1-4}
 B2 & D & E & F  \\ \cline{1-4}
 
 \end{tabular}
@@ -104,15 +104,39 @@ B2 & D & E & F  \\ \cline{1-4}
 \begin{adjustbox}{center}
 \renewcommand{\arraystretch}{2}
 %\begin{table}[]
-\begin{tabular}{| C{3cm} | C{3cm} | C{3cm} | C{3cm} | C{3cm} |}
+\begin{tabular}{| C{4cm} | C{3cm} | C{3cm} | C{3cm} | C{3cm} |}
 \hline
-Benchmark & Execution time with sparse conditional constant propagation & Execution time with destructive merge elimination & \% of improvement in Execution time \\ \cline{1-4} 
-B1 & A & B & C  \\ \cline{1-4}
+Benchmark & Execution time with sparse conditional constant propagation & Execution time with destructive merge elimination & \% of change in Execution time \\ \cline{1-4} 
+bzip2 ~~~~~~~~~~~~~~(Compressing 1.2MB file) & 0.357 & 0.835s & \%133  \\ \cline{1-4}
 B2 & D & E & F  \\ \cline{1-4}
 \end{tabular}
 %\end{table}
 \end{adjustbox}
 \captionof{table}{Execution time comparison} 
+
+~\\~
+
+Figures 1 and 2 show examples of a function CFG with SCCP and Destructive merges transformations. The function is taken from the bzip2 benchmark codebase. 
+
+\begin{figure}[H]
+\begin{subfigure}{1\textwidth}
+  \centering
+\includegraphics[width=300px]{bzip2-example-sccp} 
+\end{subfigure}
+\caption{function isempty\_RL in bzip2 with SCCP transformation}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\begin{subfigure}{1\textwidth}
+  \centering
+\includegraphics[width=300px]{bzip2-example-dm} 
+\end{subfigure}%
+\caption{function isempty\_RL in bzip2 with Destructive merge transformation}
+\label{fig:test}
+\end{figure}
+
+
 \subsection{Work Breakdown}
 ~\\~
 \begin{adjustbox}{center}
@@ -121,7 +145,7 @@ B2 & D & E & F  \\ \cline{1-4}
 \begin{tabular}{| C{3cm} | C{3cm} | C{3cm} | C{3cm} | C{3cm} |}
 \hline
 Destructive Merges Detection & Split Graph and CFG Reconstruction & Preliminary Reachability Analysis & Report & Integrating and testing \\ \cline{1-5} 
-Mansour & Chayne & Chayne & Mansour &  \\ \cline{1-5}
+Mansour & Chayne & Chayne & Mansour &  Chayne\&Mansour \\ \cline{1-5}
 
 \end{tabular}
 %\end{table}
