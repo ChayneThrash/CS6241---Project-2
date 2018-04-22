@@ -1,0 +1,432 @@
+%!PS-Adobe-3.0
+%%Creator: graphviz version 2.38.0 (20140413.2041)
+%%Title: CFG for 'isempty_RL' function
+%%Pages: (atend)
+%%BoundingBox: (atend)
+%%EndComments
+save
+%%BeginProlog
+/DotDict 200 dict def
+DotDict begin
+
+/setupLatin1 {
+mark
+/EncodingVector 256 array def
+ EncodingVector 0
+
+ISOLatin1Encoding 0 255 getinterval putinterval
+EncodingVector 45 /hyphen put
+
+% Set up ISO Latin 1 character encoding
+/starnetISO {
+        dup dup findfont dup length dict begin
+        { 1 index /FID ne { def }{ pop pop } ifelse
+        } forall
+        /Encoding EncodingVector def
+        currentdict end definefont
+} def
+/Times-Roman starnetISO def
+/Times-Italic starnetISO def
+/Times-Bold starnetISO def
+/Times-BoldItalic starnetISO def
+/Helvetica starnetISO def
+/Helvetica-Oblique starnetISO def
+/Helvetica-Bold starnetISO def
+/Helvetica-BoldOblique starnetISO def
+/Courier starnetISO def
+/Courier-Oblique starnetISO def
+/Courier-Bold starnetISO def
+/Courier-BoldOblique starnetISO def
+cleartomark
+} bind def
+
+%%BeginResource: procset graphviz 0 0
+/coord-font-family /Times-Roman def
+/default-font-family /Times-Roman def
+/coordfont coord-font-family findfont 8 scalefont def
+
+/InvScaleFactor 1.0 def
+/set_scale {
+       dup 1 exch div /InvScaleFactor exch def
+       scale
+} bind def
+
+% styles
+/solid { [] 0 setdash } bind def
+/dashed { [9 InvScaleFactor mul dup ] 0 setdash } bind def
+/dotted { [1 InvScaleFactor mul 6 InvScaleFactor mul] 0 setdash } bind def
+/invis {/fill {newpath} def /stroke {newpath} def /show {pop newpath} def} bind def
+/bold { 2 setlinewidth } bind def
+/filled { } bind def
+/unfilled { } bind def
+/rounded { } bind def
+/diagonals { } bind def
+/tapered { } bind def
+
+% hooks for setting color 
+/nodecolor { sethsbcolor } bind def
+/edgecolor { sethsbcolor } bind def
+/graphcolor { sethsbcolor } bind def
+/nopcolor {pop pop pop} bind def
+
+/beginpage {	% i j npages
+	/npages exch def
+	/j exch def
+	/i exch def
+	/str 10 string def
+	npages 1 gt {
+		gsave
+			coordfont setfont
+			0 0 moveto
+			(\() show i str cvs show (,) show j str cvs show (\)) show
+		grestore
+	} if
+} bind def
+
+/set_font {
+	findfont exch
+	scalefont setfont
+} def
+
+% draw text fitted to its expected width
+/alignedtext {			% width text
+	/text exch def
+	/width exch def
+	gsave
+		width 0 gt {
+			[] 0 setdash
+			text stringwidth pop width exch sub text length div 0 text ashow
+		} if
+	grestore
+} def
+
+/boxprim {				% xcorner ycorner xsize ysize
+		4 2 roll
+		moveto
+		2 copy
+		exch 0 rlineto
+		0 exch rlineto
+		pop neg 0 rlineto
+		closepath
+} bind def
+
+/ellipse_path {
+	/ry exch def
+	/rx exch def
+	/y exch def
+	/x exch def
+	matrix currentmatrix
+	newpath
+	x y translate
+	rx ry scale
+	0 0 1 0 360 arc
+	setmatrix
+} bind def
+
+/endpage { showpage } bind def
+/showpage { } def
+
+/layercolorseq
+	[	% layer color sequence - darkest to lightest
+		[0 0 0]
+		[.2 .8 .8]
+		[.4 .8 .8]
+		[.6 .8 .8]
+		[.8 .8 .8]
+	]
+def
+
+/layerlen layercolorseq length def
+
+/setlayer {/maxlayer exch def /curlayer exch def
+	layercolorseq curlayer 1 sub layerlen mod get
+	aload pop sethsbcolor
+	/nodecolor {nopcolor} def
+	/edgecolor {nopcolor} def
+	/graphcolor {nopcolor} def
+} bind def
+
+/onlayer { curlayer ne {invis} if } def
+
+/onlayers {
+	/myupper exch def
+	/mylower exch def
+	curlayer mylower lt
+	curlayer myupper gt
+	or
+	{invis} if
+} def
+
+/curlayer 0 def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+14 default-font-family set_font
+1 setmiterlimit
+% /arrowlength 10 def
+% /arrowwidth 5 def
+
+% make sure pdfmark is harmless for PS-interpreters other than Distiller
+/pdfmark where {pop} {userdict /pdfmark /cleartomark load put} ifelse
+% make '<<' and '>>' safe on PS Level 1 devices
+/languagelevel where {pop languagelevel}{1} ifelse
+2 lt {
+    userdict (<<) cvn ([) cvn load put
+    userdict (>>) cvn ([) cvn load put
+} if
+
+%%EndSetup
+setupLatin1
+%%Page: 1 1
+%%PageBoundingBox: 36 36 616 542
+%%PageOrientation: Portrait
+0 0 1 beginpage
+gsave
+36 36 580 506 boxprim clip newpath
+1 1 set_scale 0 rotate 40 40 translate
+0 0 0 graphcolor
+14 /Times-Roman set_font
+200.5 7.8 moveto 171 (CFG for 'isempty_RL' function) alignedtext
+% Node0x8584040
+gsave
+1 setlinewidth
+0 0 0 nodecolor
+newpath 128 301.5 moveto
+128 497.5 lineto
+572 497.5 lineto
+572 301.5 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 482.3 moveto 32 (entry:) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 467.3 moveto 154 ( %retval = alloca i8, align 1) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 452.3 moveto 234 ( %s.addr = alloca %struct.EState*, align 8) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 437.3 moveto 266 ( %"reg2mem alloca point" = bitcast i32 0 to i32) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 422.3 moveto 339 ( store %struct.EState* %s, %struct.EState** %s.addr, align 8) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 407.3 moveto 349 ( %0 = load %struct.EState*, %struct.EState** %s.addr, align 8) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 392.3 moveto 428 ( %state_in_ch = getelementptr inbounds %struct.EState, %struct.EState* %0,) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 377.3 moveto 85 (... i32 0, i32 13) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 362.3 moveto 237 ( %1 = load i32, i32* %state_in_ch, align 4) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 347.3 moveto 173 ( %cmp = icmp ult i32 %1, 256) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 332.3 moveto 269 ( br i1 %cmp, label %land.lhs.true, label %if.else) alignedtext
+1 setlinewidth
+0 0 0 nodecolor
+newpath 128 324.5 moveto
+572 324.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+234.5 309.3 moveto 9 (T) alignedtext
+1 setlinewidth
+0 0 0 nodecolor
+newpath 350 301.5 moveto
+350 324.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+457 309.3 moveto 8 (F) alignedtext
+grestore
+% Node0x8577fc0
+gsave
+1 setlinewidth
+0 0 0 nodecolor
+newpath 0 128.5 moveto
+0 264.5 lineto
+448 264.5 lineto
+448 128.5 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+8 249.3 moveto 76 (land.lhs.true: ) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+8 234.3 moveto 349 ( %2 = load %struct.EState*, %struct.EState** %s.addr, align 8) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+8 219.3 moveto 432 ( %state_in_len = getelementptr inbounds %struct.EState, %struct.EState* %2,) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+8 204.3 moveto 85 (... i32 0, i32 14) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+8 189.3 moveto 241 ( %3 = load i32, i32* %state_in_len, align 8) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+8 174.3 moveto 168 ( %cmp1 = icmp sgt i32 %3, 0) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+8 159.3 moveto 244 ( br i1 %cmp1, label %if.then, label %if.else) alignedtext
+1 setlinewidth
+0 0 0 nodecolor
+newpath 0 151.5 moveto
+448 151.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+107.5 136.3 moveto 9 (T) alignedtext
+1 setlinewidth
+0 0 0 nodecolor
+newpath 224 128.5 moveto
+224 151.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+332 136.3 moveto 8 (F) alignedtext
+grestore
+% Node0x8584040->Node0x8577fc0
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 239 301 moveto
+239 292.43 238.49 283.49 237.66 274.62 curveto
+stroke
+0 0 0 edgecolor
+newpath 241.14 274.23 moveto
+236.59 264.66 lineto
+234.17 274.98 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 241.14 274.23 moveto
+236.59 264.66 lineto
+234.17 274.98 lineto
+closepath stroke
+grestore
+% Node0x8585440
+gsave
+1 setlinewidth
+0 0 0 nodecolor
+newpath 302.5 23.5 moveto
+302.5 91.5 lineto
+511.5 91.5 lineto
+511.5 23.5 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+310.5 76.3 moveto 41 (if.else: ) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+310.5 61.3 moveto 172 ( store i8 1, i8* %retval, align 1) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+310.5 46.3 moveto 193 ( %5 = load i8, i8* %retval, align 1) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+310.5 31.3 moveto 43 ( ret i8 1) alignedtext
+grestore
+% Node0x8584040->Node0x8585440
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 461 301 moveto
+461 224.09 481.44 200.92 457 128 curveto
+453.74 118.28 448.61 108.74 442.84 100.01 curveto
+stroke
+0 0 0 edgecolor
+newpath 445.53 97.74 moveto
+436.92 91.56 lineto
+439.8 101.76 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 445.53 97.74 moveto
+436.92 91.56 lineto
+439.8 101.76 lineto
+closepath stroke
+grestore
+% Node0x8577fc0->Node0x8585440
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 449 139.5 moveto
+469 139.5 459.06 119.8 443.85 99.83 curveto
+stroke
+0 0 0 edgecolor
+newpath 446.52 97.58 moveto
+437.57 91.91 lineto
+441.04 101.92 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 446.52 97.58 moveto
+437.57 91.91 lineto
+441.04 101.92 lineto
+closepath stroke
+grestore
+% Node0x85853f0
+gsave
+1 setlinewidth
+0 0 0 nodecolor
+newpath 7.5 23.5 moveto
+7.5 91.5 lineto
+216.5 91.5 lineto
+216.5 23.5 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+15.5 76.3 moveto 43 (if.then: ) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+15.5 61.3 moveto 172 ( store i8 0, i8* %retval, align 1) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+15.5 46.3 moveto 193 ( %4 = load i8, i8* %retval, align 1) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+15.5 31.3 moveto 43 ( ret i8 0) alignedtext
+grestore
+% Node0x8577fc0->Node0x85853f0
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 112 128 moveto
+112 119.59 112 110.61 112 102 curveto
+stroke
+0 0 0 edgecolor
+newpath 115.5 101.73 moveto
+112 91.73 lineto
+108.5 101.73 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 115.5 101.73 moveto
+112 91.73 lineto
+108.5 101.73 lineto
+closepath stroke
+grestore
+endpage
+showpage
+grestore
+%%PageTrailer
+%%EndPage: 1
+%%Trailer
+%%Pages: 1
+%%BoundingBox: 36 36 616 542
+end
+restore
+%%EOF
