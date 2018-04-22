@@ -91,7 +91,16 @@ namespace {
             }
             else
             {
-              if (instruction.getOpcode() == Instruction::Call || instruction.getOpcode() == Instruction::GetElementPtr)
+              if (instruction.getOpcode() == Instruction::Store)
+              {
+                Value* pointerOperand = instruction.getOperand(1);
+                PointerType* pointerType = dyn_cast<PointerType>(pointerOperand->getType());
+                if (isa<PointerType>(pointerType->getElementType()))
+                {
+                  continue;
+                }
+              }
+              else if (instruction.getOpcode() == Instruction::Call || instruction.getOpcode() == Instruction::GetElementPtr)
               {
                 continue;
               }
